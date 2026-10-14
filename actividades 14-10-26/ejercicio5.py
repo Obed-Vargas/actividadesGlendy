@@ -20,44 +20,38 @@ class AFD:
         return estado_actual in self.F  
 
 
-# --- Ejercicio 5 (AFD Equivalente) ---
+# --- Ejercicio 5 (AFD Directo) ---
 
 # 1. Quintupla del AFD
-Q = {'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q_trampa'} # conjunto de estados
-sigma = {'0', '1'}                                  # alfabeto
+Q = {'A', 'B', 'C', 'D', 'E'}  # conjunto de estados
+sigma = {'0', '1'}             # alfabeto
 
-# Funcion de transicion
+# Funcion de transicion exacta del diagrama
 delta = {
-    ('q0', '0'): 'q2',         # Desde {A} con '0' va a {B}
-    ('q0', '1'): 'q1',         # Desde {A} con '1' va a {B, C}
+    ('C', '0'): 'D',
+    ('C', '1'): 'A',
     
-    ('q1', '0'): 'q3',         # Desde {B, C} con '0' va a {B, C, D}
-    ('q1', '1'): 'q4',         # Desde {B, C} con '1' va a {E}
+    ('A', '0'): 'B',
+    ('A', '1'): 'B',
     
-    ('q2', '0'): 'q5',         # Desde {B} con '0' va a {C, D}
-    ('q2', '1'): 'q4',         # Desde {B} con '1' va a {E}
+    ('B', '0'): 'C',
+    ('B', '1'): 'E',
     
-    ('q3', '0'): 'q5',         # Desde {B, C, D} con '0' va a {B, C, D}
-    ('q3', '1'): 'q3',         # Desde {B, C, D} con '1' va a {B, E}
+    ('D', '0'): 'B',
+    ('D', '1'): 'B',
     
-    ('q4', '0'): 'q5',         # Desde {E} con '0' va a {D}
-    ('q4', '1'): 'q5',         # Desde {E} con '1' va a {D}
-    
-    ('q5', '0'): 'q5',         # Ciclo de transiciones internas
-    ('q5', '1'): 'q2',
-    
-    ('q_trampa', '0'): 'q_trampa',
-    ('q_trampa', '1'): 'q_trampa'
+    ('E', '0'): 'D',
+    ('E', '1'): 'D'
 }
 
-q0 = 'q0'                         # Estado inicial {A}
-F = {'q1', 'q3', 'q4', 'q5'}      # Estados finales (contienen a C o E)
+q0 = 'C'        # Estado inicial (indicado por la flecha)
+F = {'C', 'E'}  # Estados finales de aceptacion (doble circulo)
 
 # Construccion del AFD
 mi_afd = AFD(Q, sigma, delta, q0, F)
 
 # Casos de prueba
-cadenas = ['1', '01', '00', '10', '11', '000', '1010']
+cadenas = ['', '10', '01', '100', '011', '110', '000']
 print("-- Pruebas Ejercicio 5 --")
 for cadena in cadenas:
     resultado = mi_afd.procesar(cadena)

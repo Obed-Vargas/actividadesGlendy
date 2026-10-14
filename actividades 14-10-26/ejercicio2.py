@@ -20,31 +20,43 @@ class AFD:
         return estado_actual in self.F  
 
 
-# --- Ejercicio 2 (AFD Equivalente) ---
+# --- Ejercicio 2 Corregido (AFD Equivalente) ---
 
-# 1. Quintupla del AFD
-Q = {'q0', 'q1', 'q_trampa'} # conjunto de estados
-sigma = {'a', 'b'}           # alfabeto
+# Estados del AFD:
+# q0 = {1, 2}
+# q1 = {1, 2, 3}
+# q2 = {2}
+# q3 = {2, 3}
 
-# Funcion de transicion
+Q = {'q0', 'q1', 'q2', 'q3', 'q_trampa'} 
+sigma = {'a', 'b'}
+
 delta = {
-    ('q0', 'a'): 'q1',         # Con 'a' se llega al estado 3 (q1)
-    ('q0', 'b'): 'q1',         # Con 'b' se llega al estado 3 (q1)
-    ('q1', 'a'): 'q_trampa',   # Desde el estado 3 no hay salida con 'a'
-    ('q1', 'b'): 'q1',         # Con 'b' tiene bucle en el estado 3
+    # Desde q0 = {1, 2}:
+    ('q0', 'a'): 'q1',         # Desde 1 va a 3 y desde 2 va a 1 (con epsilon va a 2) -> {1, 2, 3}
+    ('q0', 'b'): 'q_trampa',   # Ni 1 ni 2 tienen salida directa con 'b'
+
+    # Desde q1 = {1, 2, 3}:
+    ('q1', 'a'): 'q1',         # Con 'a': de 1->3, de 2->1(2), de 3->2(1) -> {1, 2, 3}
+    ('q1', 'b'): 'q3',         # Con 'b': de 3 tiene bucle a 3 y va a 2(1) -> {2, 3}
+
+    # Desde q3 = {2, 3}:
+    ('q3', 'a'): 'q1',         # Con 'a': de 2->1(2) y de 3->2(1) -> {1, 2, 3}
+    ('q3', 'b'): 'q3',         # Con 'b': de 3 a 3 y a 2 -> {2, 3}
+
     ('q_trampa', 'a'): 'q_trampa',
     ('q_trampa', 'b'): 'q_trampa'
 }
 
-q0 = 'q0'    # representa {1, 2}
-F = {'q0'}   # es de aceptacion por incluir al estado 2
+q0 = 'q0'    
+F = {'q0', 'q1', 'q3'}  # Son de aceptación todos los que contienen al estado 2
 
 # Construccion del AFD
 mi_afd = AFD(Q, sigma, delta, q0, F)
 
 # Casos de prueba
-cadenas = ['', 'a', 'b', 'ab', 'bb', 'aab', 'bba']
-print("-- Pruebas Ejercicio 2 (con sintaxis AFD) --")
+cadenas = ['', 'a', 'b', 'ab', 'ba', 'aab', 'bb']
+print("-- Pruebas Ejercicio 2 (Corregido) --")
 for cadena in cadenas:
     resultado = mi_afd.procesar(cadena)
     veredicto = "aceptada" if resultado else "rechazada"
